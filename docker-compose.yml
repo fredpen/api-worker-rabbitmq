@@ -31,6 +31,22 @@ services:
       - NodeRabbitMqWorker
     command: ${COMMAND}
 
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: rabbit
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: appuser
+      RABBITMQ_DEFAULT_PASS: apppassword
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - NodeRabbitMqWorker
+
+volumes:
+  rabbitmq-data:
 
 networks:
   NodeRabbitMqWorker:

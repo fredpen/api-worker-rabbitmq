@@ -1,7 +1,9 @@
 import express = require("express");
+import ProducerController from "./Controller/ProducerController";
 
 const app = express();
 app.use(express.json());
+const port = process.env.API_PORT;
 app.use(express.urlencoded({extended: true}));
 
 
@@ -10,8 +12,15 @@ app.get("/", (req: express.Request, res: express.Response) => {
 })
 
 
-// app is listening
-const port = process.env.API_PORT;
+// test broadcase
+app.get("/broadcast", async (req: express.Request, res: express.Response) => {
+    const messageResponse = await ProducerController.handle()
+    return res.json({message: `Broadcast is completed`,messageResponse})
+})
+
+
+
+
 app.listen(port, () => {
     console.log(`we are live on port ${port}`);
 });

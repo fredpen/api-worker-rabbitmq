@@ -5,6 +5,7 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/app.ts"
   },
   "dependencies": {
+    "amqplib": "^0.10.9",
     "express": "^5.2.1"
   },
   "devDependencies": {
@@ -17,6 +18,7 @@
     "npm": "^11.7.0",
     "prettier": "^3.7.4",
     "ts-node": "^10.9.2",
+    "@types/amqplib": "0.10.6",
     "typescript": "^5.9.3"
   }
 }
