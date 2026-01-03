@@ -15,18 +15,21 @@ services:
       - NodeRabbitMqWorker
     command: ${COMMAND}
 
-#  worker:
-#    build:
-#      context: worker
-#      dockerfile: Dockerfile
-#    container_name: worker
-#    env_file:
-#      - .env
-#    volumes:
-#      - ./worker/src:/usr/src/app
-#      - /usr/src/app/node_modules
-#    ports:
-#      - "3000:3031"
+  worker:
+    build:
+      context: worker
+      dockerfile: Dockerfile
+    container_name: worker
+    env_file:
+      - .env
+    volumes:
+      - ./worker:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3031:3031"
+    networks:
+      - NodeRabbitMqWorker
+    command: ${COMMAND}
 
 
 networks:
