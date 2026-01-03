@@ -1,0 +1,5 @@
+task.md
+.DS_Store
+.idea/
+.env
+.dockerIgnore
