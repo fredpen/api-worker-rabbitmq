@@ -2,36 +2,44 @@ import amqp from 'amqplib';
 
 export default class ConsumerController {
 
+    private static queueName = process.env.EMAIL_QUEUE_NAME ?? "";
+    private static amqpUrl = process.env.RABBIT_SERVER_URL ?? "";
+
     static async handle() {
 
-        const url = process.env.RABBIT_SERVER_URL ?? "";
-        const connection = await amqp.connect(url);
-        const channel: amqp.Channel = await connection.createChannel();
+        const connection = await amqp.connect(this.amqpUrl);
+        const channel = await connection.createChannel();
 
-        // Subscribing to email-queue
-        await channel.assertQueue('email-queue', {durable: true});
-        await channel.consume('email-queue', (msg) => {
-            if (msg) this.handleMessage(channel, 'sms-queue', msg);
-        });
+        try {
+            const q = await channel.checkQueue(this.queueName);
+            console.log(`Queue exists. Messages: ${q.messageCount}`);
+        } catch (err) {
+            console.error('Queue does not exist yet, cannot consume.');
+            process.exit(1);
+        }
 
-        // Subscribing to sms-queue
-        await channel.assertQueue('sms-queue', {durable: true});
-        await channel.consume('sms-queue', (msg) => {
-            return msg ? this.handleMessage(channel, 'sms-queue', msg) : null;
+
+        await channel.consume(this.queueName, (message) => {
+            if (!message) return null;
+
+            try {
+                const parsedMessage = JSON.parse(message.content.toString());
+                console.log('Handling notification:', parsedMessage);
+                if (parsedMessage.id < 5) throw Error("Just wanted to break things");
+
+                channel.ack(message);
+            } catch (err) {
+                channel.nack(message, false, false);
+            }
         });
     }
 
     private static async handleMessage(channel: amqp.Channel, queueName: string, message: amqp.ConsumeMessage) {
 
         const parsedMessage = JSON.parse(message.content.toString());
+        console.log('Handling notification:', parsedMessage);
 
-        if (queueName === 'email-queue') {
-            console.log('Handling email notification:', parsedMessage);
-        } else if (queueName === 'sms-queue') {
-            console.log('Handling SMS notification:', parsedMessage);
-        } else {
-            console.log('Unknown queue:', queueName);
-        }
+        if (parsedMessage.id < 5) return channel.nack(message, false, false);
 
         channel.ack(message);
     }

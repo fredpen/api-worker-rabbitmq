@@ -38,12 +38,20 @@ services:
       - "5672:5672"    # AMQP
       - "15672:15672"  # Management UI
     environment:
-      RABBITMQ_DEFAULT_USER: appuser
-      RABBITMQ_DEFAULT_PASS: apppassword
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     networks:
       - NodeRabbitMqWorker
+
+#  redis:
+#    image: redis:alpine
+#    networks:
+#      - NodeRabbitMqWorker
+#    container_name: redis
+#    ports:
+#      - "5432:5432"
 
 volumes:
   rabbitmq-data:

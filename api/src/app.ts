@@ -12,13 +12,16 @@ app.get("/", (req: express.Request, res: express.Response) => {
 })
 
 
-// test broadcase
+// test broadcast
 app.get("/broadcast", async (req: express.Request, res: express.Response) => {
     const messageResponse = await ProducerController.handle()
-    return res.json({message: `Broadcast is completed`,messageResponse})
+    return res.json({message: `Broadcast is completed`, messageResponse})
 })
 
-
+app.get("/broadcast-with-dlx", async (req: express.Request, res: express.Response) => {
+    const messageResponse = await ProducerController.publishWithDLX()
+    return res.json({message: `publishWithDLX is completed`, messageResponse})
+})
 
 
 app.listen(port, () => {
