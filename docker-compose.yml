@@ -45,14 +45,6 @@ services:
     networks:
       - NodeRabbitMqWorker
 
-#  redis:
-#    image: redis:alpine
-#    networks:
-#      - NodeRabbitMqWorker
-#    container_name: redis
-#    ports:
-#      - "5432:5432"
-
 volumes:
   rabbitmq-data:
 
