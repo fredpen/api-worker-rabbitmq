@@ -9,7 +9,7 @@ In building a Node.js workflow with RabbitMQ, several practical lessons emerged 
 highlight how asynchronous messaging can enforce clear responsibility boundaries, improve reliability, and simplify
 operational reasoning.
 
-`
+```
 Project structure
 ├── api/
 │   ├── Dockerfile
@@ -23,4 +23,4 @@ Project structure
 │
 ├── docker-compose.yml
 └── README.md
-`
+```
