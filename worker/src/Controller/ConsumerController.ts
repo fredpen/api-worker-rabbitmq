@@ -23,6 +23,16 @@ export default class ConsumerController {
             if (!message) return null;
 
             try {
+
+                // Idempotency - Check if already processed
+                const exists = await redis.get(key);
+                if (exists) {
+                    channel.ack(message);
+                    return;
+                }
+
+
+                // process the message
                 const parsedMessage = JSON.parse(message.content.toString());
                 console.log('Handling notification:', parsedMessage);
                 if (parsedMessage.id < 5) throw Error("Just wanted to break things");
@@ -32,15 +42,5 @@ export default class ConsumerController {
                 channel.nack(message, false, false);
             }
         });
-    }
-
-    private static async handleMessage(channel: amqp.Channel, queueName: string, message: amqp.ConsumeMessage) {
-
-        const parsedMessage = JSON.parse(message.content.toString());
-        console.log('Handling notification:', parsedMessage);
-
-        if (parsedMessage.id < 5) return channel.nack(message, false, false);
-
-        channel.ack(message);
     }
 }
