@@ -25,11 +25,11 @@ export default class ConsumerController {
             try {
 
                 // Idempotency - Check if already processed
-                const exists = await redis.get(key);
-                if (exists) {
-                    channel.ack(message);
-                    return;
-                }
+                // const exists = await redis.get(key);
+                // if (exists) {
+                //     channel.ack(message);
+                //     return;
+                // }
 
 
                 // process the message

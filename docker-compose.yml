@@ -45,6 +45,18 @@ services:
     networks:
       - NodeRabbitMqWorker
 
+  cacheLayer:
+    image: redis:alpine
+    container_name: cacheLayer
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    networks:
+      - NodeRabbitMqWorker
+    volumes:
+      - redis-data:/data
+
+
+
+
 volumes:
   rabbitmq-data:
 
